@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <% include ../partials/head %>
+</head>
+
+<body>
+    <% include ../partials/header %>
+    <div class="container-fluid container-fluid-spacious">
+        <div class="dashhead mt-4">
+            <div class="dashhead-titles">
+                <h6 class="dashhead-subtitle">.SHELDYN.</h6>
+                <h2 class="dashhead-title">Add Iso Notification</h2>
+            </div>
+        </div>
+        <form id="notifyDetials" name="addiso" action="/iso/Add" method="post">
+            <div class="form-group">
+                <label for="INCNumber">INC Number</label>
+                <input type="text" class="form-control" name="INCNumber" id="INCNumber" placeholder="INC 1234">
+            </div>
+            <div class="form-group">
+                <label for="Date_Sent">Date Sent</label>
+                <input type="text" data-provide="datepicker" class="form-control" name="Date_Sent" id="Date_Sent" placeholder="1/1/2019">
+            </div>
+            <div class="form-group">
+                <label for="Date_noticed">Date Noticed</label>
+                <input type="text" data-provide="datepicker" class="form-control" name="Date_noticed" id="Date_noticed" placeholder="1/1/2019">
+            </div>
+            <div class="form-group">
+                <label for="Date_Confirmed">Date Confirmed</label>
+                <input class="form-control" type="text" data-provide="datepicker" name="Date_Confirmed" id="Date_Confirmed" placeholder="1/1/2019">
+            </div>
+            <div class="form-group">
+                <label for="Department">Department</label>
+                <input type="text" class="form-control" name="Department" id="Department" placeholder="CDT">
+            </div>
+            <div class="form-group">
+                <label for="Issue">Issue</label>
+                <input type="text" class="form-control" name="Issue" id="Issue" placeholder="Exploit on CDT System">
+            </div>
+            <div class="form-group">
+                <label for="Remediation">Remediation Taken</label>
+                <input type="text" class="form-control" name="Remediation" id="Remediation" placeholder="Contacted ISO">
+            </div>
+            <div class="form-group">
+                <label for="Tools">Tools</label>
+                <input type="text" class="form-control" name="Tools" id="Tools" placeholder="WireShark, DDI">
+            </div>
+            <div class="form-group">
+                <label for="AnalystName">Analyst</label>
+                <input type="text" class="form-control" name="AnalystName" id="AnalystName" placeholder="Sheldyn">
+            </div>
+            <div class="form-group">
+                <input type="checkbox" name="Malicious" class="form-check-input" value="yes" id="Malicious">
+                <label for="Malicious">Malicious</label>
+            </div>
+            <div class="form-group">
+                <label for="ISO_CallDate">ISO Call Date</label>
+                <input type="text" data-provide="datepicker" class="form-control" name="ISO_CallDate" id="ISO_CallDate" placeholder="1/1/2019">
+            </div>
+            <div class="form-group">
+                <input type="checkbox" name="Response" class="form-check-input" value="yes" id="Response">
+                <label for="Response">Response</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" name="Esculation" class="form-check-input" value="yes" id="Esculation">
+                <label for="Esculation">Esculation</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" name="CALCSIRS" class="form-check-input" value="yes" id="CALCSIRS">
+                <label for="CALCSIRS">CALCSIRS</label>
+            </div>
+            <input name="submit" type="submit" class="btn btn-primary" value="submit">
+        </form>
+    </div>
+    <div class="modal" id="results">
+            <div class="modal-dialog modal-sm">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 id="status-title" class="modal-title"></h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p id="status-body"></p>
+                </div>
+                <div class="modal-actions">
+                  <button type="button" class="btn-link modal-action" data-dismiss="modal">
+                    <strong><a href="/iso/list">OK</a></strong>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+</body>
+<% include ../partials/footer %>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#isoNav').addClass('active');
+        $('#notifyDetials').validate({
+            rules: {
+                Date_Sent: {
+                    required: true
+                },
+                Department: {
+                    required: true
+                },
+                Issue: {
+                    minlength: 10,
+                    required: true
+                },
+                Remediation: {
+                    minlength: 10,
+                    required: true
+                },
+                AnalystName: {
+                    minlength: 3,
+                    required: true
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.control-group').removeClass('success').addClass('error');
+            },
+            success: function (element) {
+                element.addClass('valid')
+                    .closest('.control-group').removeClass('error').addClass('success');
+            }
+        });
+        $('#notifyDetials').submit(function (e) {
+        e.preventDefault();
+        if(! $('#notifyDetials').valid()) return false;
+          $(this).ajaxSubmit({
+            data: $(this).serialize(),
+            error: function (xhr) {
+              status('Error: ' + xhr.status);
+            },
+            success: function (response) {
+              console.log(response)
+              if (response === 'SUCCESS') {
+                $("#status-title").empty().text(response);
+                $("#status-body").empty().text('Notification Created');
+                $("#notifyDetials")[0].reset();
+              } else {
+                $("#status-title").empty().text('FAILED');
+                $("#status-body").empty().text(`Could not create notification ${response}`);
+              }
+              $("#results").modal('show');
+
+            }
+          });
+          return false;
+        });
+    });
+</script>
+
+</html>

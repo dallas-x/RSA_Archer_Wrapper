@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+
+<body class="with-top-navbar">
+    <% include ../partials/header %>
+
+    <div class="container-fluid container-fluid-spacious">
+        <div class="dashhead mt-4">
+            <div class="dashhead-titles">
+                <h6 class="dashhead-subtitle">.SHELDYN.</h6>
+                <h2 class="dashhead-title">ISO Notification Tracker</h2>
+                <a class="btn btn-pill btn-success" href="/iso/add">ADD ISO</a>
+            </div>
+        </div>
+        <br>
+        <div class="table-responsive">
+            <table id="eventTable" class="table" data-sort="table">
+                <thead>
+                    <tr>
+                        <th>INC Number</th>
+                        <th>Date Sent</th>
+                        <th>Department</th>
+                        <th>Analyst</th>
+                        <th>Response</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(var value of rows) {%>
+                        <tr>
+                            <td>
+                                <%=value['INCNumber']%>
+                            </td>
+                            <td>
+                                <%=value['Date_ISO_Sent']%>
+                            </td>
+                            <td>
+                                <%=value['Department']%>
+                            </td>
+                            <td>
+                                <%=value['Analyst']%>
+                            </td>
+                            <td>
+                                <%=value['Response']%>
+                            </td>
+                            <td>
+                                <a href="/iso/iso/<%=value['rowid']%>">Details</a>
+                            </td>
+                        </tr>
+                        <%}%>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <% include ../partials/footer %>
+    <script>
+        $(document).ready(function () {
+            $('#eventTable').after('<nav><ul style="overflow:hidden" class"pagination" id="page"></ul></nav>');
+            var rowsShown = 15;
+            var rowsTotal = $('#eventTable tbody tr').length;
+            var numPages = rowsTotal / rowsShown;
+            for (i = 0; i < numPages; i++) {
+                var pageNum = i + 1;
+                $('#page').append('<li style="display:inline-block" class="page-item"><a class="page-link" href="#" rel="' + i + '">' +
+                    pageNum + '</a></li> ');
+            }
+            $('#eventTable tbody tr').hide();
+            $('#eventTable tbody tr').slice(0, rowsShown).show();
+            $('#page a:first').addClass('active');
+            $('#page a').bind('click', function () {
+
+                $('#page a').removeClass('active');
+                $(this).addClass('active');
+                var currPage = $(this).attr('rel');
+                var startItem = currPage * rowsShown;
+                var endItem = startItem + rowsShown;
+                $('#eventTable tbody tr').css('opacity','0.0').hide().slice(startItem, endItem).
+                css('display', 'table-row').animate({
+                    opacity: 1
+                }, 300);
+            });
+        });
+    </script>
+    <script>
+        // execute/clear BS loaders for docs
+        $(function () {
+            $('#isoNav').addClass('active');
+            while (window.BS && window.BS.loader && window.BS.loader.length) {
+                (window.BS.loader.pop())()
+            }
+        })
+    </script>
+</body>
+
+</html>

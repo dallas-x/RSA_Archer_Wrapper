@@ -1,0 +1,1 @@
+Please run the app before pushing data to the database using a tool like navicat for sqlite.

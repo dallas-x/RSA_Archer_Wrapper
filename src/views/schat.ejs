@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+<head>
+  <% include ./partials/head %>
+</head>
+
+<body class="with-top-navbar">
+  <% include ./partials/header %>
+
+    <div class="container-fluid container-fluid-spacious">
+      <div class="dashhead mt-4">
+        <div class="dashhead-titles">
+          <h6 class="dashhead-subtitle">.SHELDYN.</h6>
+          <h2 class="dashhead-title">Sheldyn Chat</h2>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="panel.panel-default">
+          <div class="panel-heading">
+            <div class="js-userjoined">
+
+            </div>
+            <div class="js-usersinchat">
+              Users in chat:
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="contianer" id="messages">
+              <div class="row message-bubble">
+
+              </div>
+            </div>
+            <div class="panel-footer">
+              <div class="input-group">
+                <input class="form-control" id="txtmessage" type="text" value="">
+                <span class="input-group-btn"></span>
+                <button id="sendmessage" class="btn btn-default" type="button" name="button">Send</button>
+              </div>
+            </div>
+          </div>
+          <div class="typing">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <% include ./partials/footer %>
+      <script src="/socket.io/socket.io.js"></script>
+      <script>
+        var socket = io.connect('http://134.187.33.67:3000');
+
+        var username = '<%=user.userName%>';
+
+        socket.emit('join', {
+          username: username
+        });
+
+        socket.on('user joined', function (data) {
+
+          $(".js-userjoined").html(data.username + ' Joined chat room');
+
+          $.each(data.users, function (index, user) {
+
+            $(".js-usersinchat").append('<span id =' + user + '>&nbsp;&nbsp;<strong>' + user +
+              '</strong></span>');
+
+          });
+
+        });
+
+        socket.on('user disconnected', function (data) {
+
+          $("#" + data.username).remove();
+
+        });
+
+        //an event emitted from server
+        socket.on('chat message', function (data) {
+
+          var string = '<div class="row message-bubble"><p class="text-muted">' + data.username + ':</p> <p>' + data.message +
+            '</p></div>';
+
+          $('#messages').append(string);
+
+        });
+
+
+        $(function () {
+          var timeout;
+
+          function timeoutFunction() {
+
+            typing = false;
+
+            socket.emit("typing", {
+              message: '',
+              username: ''
+            });
+
+          }
+
+          $("#sendmessage").on('click', function () {
+
+            var message = $("#txtmessage").val();
+
+            $("#txtmessage").val('');
+
+            $('.typing').html("");
+
+            socket.emit('new_message', {
+              message: message,
+              username: username
+            });
+
+          });
+
+
+          socket.on('typing', function (data) {
+
+            if (data.username && data.message) {
+
+              $('.typing').html("User: " + data.username + ' ' + data.message);
+
+            } else {
+
+              $('.typing').html("");
+
+            }
+
+          });
+
+          $('#txtmessage').keyup(function () {
+            console.log('typing');
+
+            typing = true;
+
+            socket.emit('typing', {
+              message: 'typing...',
+              username: username
+            });
+
+            clearTimeout(timeout);
+
+            timeout = setTimeout(timeoutFunction, 2000);
+
+          });
+
+          $('#txtmessage').keypress(function (event) {
+            if (event.key === "Enter") {
+              var message = $("#txtmessage").val();
+
+              $("#txtmessage").val('');
+
+              $('.typing').html("");
+
+              socket.emit('new_message', {
+                message: message,
+                username: username
+              });
+            }
+          });
+
+        });
+
+
+        var typing = false;
+
+        var timeout = undefined;
+
+        function timeoutFunction() {
+
+          typing = false;
+
+          socket.emit(noLongerTypingMessage);
+
+        }
+
+        function onKeyDownNotEnter() {
+
+          if (typing == false) {
+
+            typing = true
+
+            socket.emit();
+
+            timeout = setTimeout(timeoutFunction, 5000);
+
+          } else {
+
+            clearTimeout(timeout);
+
+            timeout = setTimeout(timeoutFunction, 5000);
+
+          }
+
+        }
+      </script>
+
+      <script>
+        // execute/clear BS loaders for docs
+        $(function () {
+          $('#schatNav').addClass('active');
+          while (window.BS && window.BS.loader && window.BS.loader.length) {
+            (window.BS.loader.pop())()
+          }
+          console.log(`<%=data['stats']%>`);
+        })
+      </script>
+</body>
+
+</html>

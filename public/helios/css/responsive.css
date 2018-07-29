@@ -1,0 +1,18 @@
+@media (max-width: 480px) {
+  .message-heading {
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+  .message-description {
+    font-size: .7rem;
+    line-height: 2rem;
+  }
+  .links a {
+    margin: 10px;
+    width: 280px;
+  }
+  .social {
+    left: 50%;
+    margin-left: -55px;
+  }
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+
+<body class="with-top-navbar">
+    <% include ../partials/header %>
+
+        <div class="container-fluid container-fluid-spacious">
+            <div class="dashhead mt-4">
+                <div class="dashhead-titles">
+                    <h6 class="dashhead-subtitle">.SHELDYN.</h6>
+                    <h2 class="dashhead-title">ISO Notification Tracker</h2>
+                </div>
+            </div>
+            <br>
+            <div class="table-responsive">
+                <table id="eventTable" class="table" data-sort="table">
+                    <thead>
+                        <tr>
+                            <th>INC Number</th>
+                            <th>Date Sent</th>
+                            <th>Department</th>
+                            <th>Analyst</th>
+                            <th>Response</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <%=row['INCNumber']%>
+                            </td>
+                            <td>
+                                <%=row['Date_ISO_Sent']%>
+                            </td>
+                            <td>
+                                <%=row['Department']%>
+                            </td>
+                            <td>
+                                <%=row['Analyst']%>
+                            </td>
+                            <td>
+                                <%=row['Response']%>
+                            </td>
+                            <td>
+                                <a href="/beta/isodetail?<%=row['rowid']%>">Details</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+        </div>
+        </div>
+
+        <% include ../partials/footer %>
+            <script>
+                // execute/clear BS loaders for docs
+                $(function () {
+                    $('#isoNav').addClass('active');
+                    while (window.BS && window.BS.loader && window.BS.loader.length) {
+                        (window.BS.loader.pop())()
+                    }
+                })
+            </script>
+</body>
+
+</html>

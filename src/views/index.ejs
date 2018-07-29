@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+<head>
+    <% include ./partials/head %>
+</head>
+
+<body class="with-top-navbar">
+  <% include ./partials/header %>
+
+  <div class="container-fluid container-fluid-spacious">
+    <div class="dashhead mt-4">
+      <div class="dashhead-titles">
+        <h6 class="dashhead-subtitle">.SHELDYN.</h6>
+        <h2 class="dashhead-title">Dashboard</h2>
+      </div>
+    </div>
+
+    <div class="hr-divider mt-3 mb-5">
+      <h3 class="hr-divider-content hr-divider-heading">Quick Stats</h3>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 mb-4 mb-sm-0">
+        <div class="w-3 mx-auto">
+          <canvas class="ex-graph" width="600" height="500" data-chart="doughnut" data-dark="true" data-dataset="[<%=data['tcount']%>]"
+            data-labels="[<%=data['threat']%>]" data-dataset-options="{ borderColor: '#252830',borderWidth: [1,2,3,4,5], backgroundColor: ['#24A5CC', '#2E8099', '#46FFC4', '#FF675D', '#CC1A4F'] }">
+          </canvas>
+        </div>
+        <strong class="text-muted">TOP FIVE</strong>
+        <h3>Threats</h3>
+      </div>
+      <div class="col-sm-4 mb-4 mb-sm-0">
+        <div class="w-3 mx-auto">
+          <canvas class="ex-graph" width="600" height="500" data-chart="doughnut" data-dark="true" data-dataset="[<%=data['scount']%>]"
+            data-labels="[<%=data['source']%>]" data-dataset-options="{ borderColor: '#252830', borderWidth: [1,2,3,4,5], backgroundColor: ['#24A5CC', '#2E8099', '#46FFC4', '#FF675D', '#CC1A4F'] }">
+          </canvas>
+        </div>
+        <strong class="text-muted">TOP FIVE</strong>
+        <h3>Sources</h3>
+      </div>
+      <div class="col-sm-4 mb-4 mb-sm-0">
+        <div class="w-3 mx-auto">
+          <canvas class="ex-graph" width="600" height="500" data-chart="doughnut" data-dark="true" data-dataset="[<%=data['tycount']%>]"
+            data-labels="[<%=data['type']%>]" data-dataset-options="{ borderColor: '#252830',borderWidth: [1,2,3,4,5], backgroundColor: ['#24A5CC', '#46FFC4', '#FF675D', '#CC1A4F','#2E8099'] }">
+          </canvas>
+        </div>
+        <strong class="text-muted">TOP FIVE</strong>
+        <h3>Types</h3>
+      </div>
+    </div>
+    <div class="hr-divider mt-3 mb-5">
+        <h3 class="hr-divider-content hr-divider-heading">ISO Notificaitons</h3>
+      </div>
+    <div class="row">
+      <div class="col-sm-12 mb-4 mb-sm-0">
+      <div class="ex-line-graphs mb-5">
+        <canvas
+          class="ex-line-graph"
+          width="600" height="400"
+          data-chart="bar"
+          data-dark="true"
+          data-labels="['January','February','March', 'April', 'May', 'June', 'July','August','September','October','November','December']"
+          data-dataset="[[<%=data['months']%>],[<%=data['Response']%>]]"
+          data-dataset-options="[{label: 'Notification Sent'},{label: 'Response'}]">
+        </canvas>
+      </div>
+    </div>
+  </div>
+
+
+  <% include ./partials/footer %>
+    <script>
+      // execute/clear BS loaders for docs
+      $(function () {
+        $('#dashNav').addClass('active');
+        while (window.BS && window.BS.loader && window.BS.loader.length) {
+          (window.BS.loader.pop())()
+        }
+        console.log(`<%=data['stats']%>`);
+      })
+    </script>
+</body>
+
+</html>

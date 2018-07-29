@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+
+<body class="with-top-navbar">
+    <% include ../partials/header %>
+
+    <div class="container-fluid container-fluid-spacious">
+        <div class="dashhead mt-4">
+            <div class="dashhead-titles">
+                <h6 class="dashhead-subtitle">.SHELDYN.</h6>
+                <h2 class="dashhead-title">INC <%=row['rowid']%></h2>
+            </div>
+        </div>
+        <br>
+        <div>
+            <form id="processEvents" name="processEvent" action="/events/processEvents" method="post">
+                <div class="row">
+                <div class="form-group col-md-3 mb-3">
+                    <label for="Severity">Detection Severity</label>
+                    <input value="<%=row['Severity']%>" type="text" class="form-control" name="Severity" id="Severity" readonly>
+                </div>
+                <div class="form-group col-md-3 mb-3">
+                    <label for="Source_IP">Source IP</label>
+                    <input value="<%=row['Source_IP']%>" type="text" class="form-control" name="Source_IP" id="Source_IP" readonly>
+                </div>
+                <div class="form-group col-md-3 mb-3">
+                    <label for="Destination_IP">Destination IP</label>
+                    <input value="<%=row['Destination_IP']%>" type="text" class="form-control" name="Destination_IP" id="Destination_IP" readonly>
+                </div>
+                <div class="form-group col-md-3 mb-3">
+                    <label for="Threat_Description">Threat Description</label>
+                    <input value="<%=row['Threat_Description']%>" class="form-control" type="text" name="Threat_Description" id="Threat_Description"
+                        readonly>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-3 mb-3">
+                    <label for="IDS">IDS</label>
+                    <input value="<%=row['IDS']%>" type="text" class="form-control" name="IDS" id="IDS" readonly>
+                </div>
+                <div class="form-group col-md-3 mb-3">
+                    <label for="Source_Port">Source port</label>
+                    <input value="<%=row['Source_Port']%>" type="text" class="form-control" name="Source_Port" id="Source_Port" readonly>
+                </div>
+                <div class="form-group col-md-3 mb-3">
+                    <label for="Destination_port">Destination port</label>
+                    <input value="<%=row['Destination_port']%>" type="text" class="form-control" name="Destination_port" id="Destination_port" readonly>
+                </div>
+                <div class="form-group col-md-3 mb-3">
+                    <label for="Reference">CVE</label>
+                    <input value="<%=row['Reference']%>" class="form-control" type="text" name="Reference" id="Reference"
+                        readonly>
+                </div>
+            </div>
+                <!-- <label for="options" class="control-label input-group">How do you want to process this Incident</label>
+                <div class="btn-group">
+                    <label class="btn btn-default">
+                        <input type="radio" name="options" value="sd" checked="">SRC and Dest
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="radio" name="options" value="st">SRC and Threat
+                    </label>
+                    <label class="btn btn-default active">
+                        <input type="radio" name="options" value="td">Threat and Dest
+                    </label>
+                </div>
+                <input id="processINC" name="submit" type="submit" class="btn btn-pill btn-primary" value="submit"> -->
+            </form>
+        </div>
+        <br>
+        <form id="deleteEvent" action="/events/deleteEvent" method="post" class="form-inline hidden-sm-down ml-auto">
+            <input value="<%=row['Source_IP']%>" class="form-control" type="text" name="Source_IP" id="Event_Source_IP" hidden>
+            <input value="<%=row['Threat_Description']%>" class="form-control" type="text" name="Threat_Description" id="Event_Threat_Description"
+                hidden>
+            <input class="btn btn-pill btn-danger" type="submit" value="Delete Event" name="submit">
+        </form>
+    </div>
+    </div>
+    </div>
+    </div>
+    <% include ../partials/footer %>
+    <script>
+        $('#processINC').click(function(){
+        $('#processINC').val('Processing');
+        });
+      </script>
+    <script>
+        // execute/clear BS loaders for docs
+        $(function () {
+            $('#incNav').addClass('active');
+            while (window.BS && window.BS.loader && window.BS.loader.length) {
+                (window.BS.loader.pop())()
+            }
+        })
+    </script>
+</body>
+
+</html>

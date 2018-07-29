@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+
+<body class="with-top-navbar">
+    <% include ../partials/header %>
+
+        <div class="container-fluid container-fluid-spacious">
+            <div class="dashhead mt-4">
+                <div class="dashhead-titles">
+                    <h6 class="dashhead-subtitle">.SHELDYN.</h6>
+                    <h2 class="dashhead-title">Incidents</h2>
+                    <div class="row">
+                        <form id="processEvents" action="/events/list" method="post" class="form-inline hidden-sm-down ml-auto">
+                            <input class="btn btn-pill btn-success" type="submit" value="Process" name="submit">
+                        </form>
+                        <form id="deleteEvents" action="/events/delete" method="post" class="form-inline hidden-sm-down ml-auto">
+                            <input class="btn btn-pill btn-danger" type="submit" value="Dismiss" name="submit">
+                        </form>
+                        <form id="downloadEvents" action="/events/downloadEvents" method="post" class="form-inline hidden-sm-down ml-auto">
+                            <input class="btn btn-pill btn-info" type="submit" value="Download" name="submit">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="table-responsive">
+                <table id="eventTable" class="table" data-sort="table">
+                    <thead>
+                        <tr>
+                            <th>Date/Timestamp</th>
+                            <th>Detection Severity</th>
+                            <th>Detection Type</th>
+                            <th>Threat Description</th>
+                            <th>Source IP</th>
+                            <th>Destination IP</th>
+                            <th>Alerts</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(var value of DDIData) { if (value['count'] >= 5) {%>
+                            <tr>
+                                <td>
+                                    <%=value['Date']%>
+                                </td>
+                                <td>
+                                    <%=value['Severity']%>
+                                </td>
+                                <td>
+                                    <%=value['Detection_Type']%>
+                                </td>
+                                <td>
+                                    <%=value['Threat_Description']%>
+                                </td>
+                                <td>
+                                    <%=value['Source_IP']%>
+                                </td>
+                                <td>
+                                    <%=value['Destination_IP']%>
+                                </td>
+                                <td>
+                                    <%=value['count']%>
+                                </td>
+                                <td>
+                                    <a href="/events/<%=value['rowid']%>">Details</a>
+                                </td>
+                            </tr>
+                            <%}}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal" id="results">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 id="status-title" class="modal-title"></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="status-body"></p>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-link modal-action" data-dismiss="modal">
+                            <strong>
+                                <a href="/events/list">OK</a>
+                            </strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% include ../partials/footer %>
+            <script>
+                $(document).ready(function () {
+                    $('#incNav').addClass('active');
+                    $('#eventTable').after(
+                        '<nav><ul style="overflow:hidden" class"pagination" id="page"></ul></nav>');
+                    var rowsShown = 15;
+                    var rowsTotal = $('#eventTable tbody tr').length;
+                    var numPages = rowsTotal / rowsShown;
+                    for (i = 0; i < numPages; i++) {
+                        var pageNum = i + 1;
+                        $('#page').append(
+                            '<li style="display:inline-block" class="page-item"><a class="page-link" href="#" rel="' +
+                            i + '">' +
+                            pageNum + '</a></li> ');
+                    }
+                    $('#eventTable tbody tr').hide();
+                    $('#eventTable tbody tr').slice(0, rowsShown).show();
+                    $('#page a:first').addClass('active');
+                    $('#page a').bind('click', function () {
+
+                        $('#page a').removeClass('active');
+                        $(this).addClass('active');
+                        var currPage = $(this).attr('rel');
+                        var startItem = currPage * rowsShown;
+                        var endItem = startItem + rowsShown;
+                        $('#eventTable tbody tr').css('opacity', '0.0').hide().slice(startItem, endItem)
+                            .
+                        css('display', 'table-row').animate({
+                            opacity: 1
+                        }, 300);
+                    });
+                });
+            </script>
+            <script>
+                $(document).ready(function () {
+                    $('#processEvents').submit(function () {
+                        $("#status").empty().text('Processing');
+                        $(this).ajaxSubmit({
+                            error: function (xhr) {
+                                status('Error: ' + xhr.status);
+                            },
+                            success: function (response) {
+                                if (response === 'invalidToken') {
+                                    $("#status-title").empty().text('Invalid Session Token');
+                                    $("#status-body").empty().html(
+                                        '<a href="/auth/signin">Login</a>');
+                                    $("#results").modal('show');
+                                } else {
+                                    $("#status-title").empty().text('Success');
+                                    $("#status-body").empty().text(response);
+                                    $("#results").modal('show');
+                                }
+                            }
+                        });
+                        return false;
+                    });
+                });
+            </script>
+</body>
+
+</html>
