@@ -1,0 +1,1 @@
+This folder is where uploaded data will go and will be deleted and output file will be in output.
