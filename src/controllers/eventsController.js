@@ -8,7 +8,7 @@ const create = require('../js/ticketCreator');
 const dbFunc = require('../js/dbFunc');
 
 
-const db = new sqlite3.Database('./db/testing.db');
+const db = new sqlite3.Database('./db/RSA.db');
 
 // Move all DB functions here and pass them to the router
 

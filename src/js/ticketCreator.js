@@ -5,7 +5,7 @@ function incBody(inc, contentId) {
       const incSummary = `${inc.Detection_Type} detected: Threat ${inc.Threat_Description} from Source ${inc.Source_IP}`;
       const incDetails = `${inc.Severity} severity ${inc.Detection_Type} from Host: ${inc.Hostname}
           / Source IP: ${inc.Source_IP} --->>> Destination IP: ${inc.Destination_IP} on Port: ${inc.Destination_port}`;
-      const source = inc.IDS_Code;
+      const source = 12345; // Some source type must be int
       const incidentBody =
                     {
                       Content: {
@@ -52,7 +52,6 @@ function alertBody(alert, refId) {
                         16262: { Type: 1, Value: alert.Destination_Hostname, FieldId: 16262 },
                         16213: { Type: 1, Value: alert.Source_MAC_Address, FieldId: 16213 },
                         16246: { Type: 1, Value: alert.Severity, FieldId: 16246 },
-                        16263: { Type: 1, Value: alert.IDS, FieldId: 16263 },
                         16254: { Type: 1, Value: alert.Detection_Type, FieldId: 16254 },
                         16315: { Type: 1, Value: alert.Hostname, FieldId: 16315 },
                         16299: { Type: 1, Value: alert.Threat_Description, FieldId: 16299 },

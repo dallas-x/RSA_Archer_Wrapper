@@ -2,12 +2,10 @@ import 'babel-register';
 import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
-import chalk from 'chalk';
 import morgan from 'morgan';
 
 require('dotenv').config();
 
-const debug = require('debug')('app');
 const authRouter = require('./src/routes/authRoutes');
 const betaRouter = require('./src/routes/beta');
 const eventRouter = require('./src/routes/eventRoutes');

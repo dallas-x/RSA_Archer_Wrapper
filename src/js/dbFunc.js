@@ -1,14 +1,14 @@
 import sqlite3 from 'sqlite3';
 import _ from 'underscore';
 
-const db = new sqlite3.Database('./db/testing.db');
+const db = new sqlite3.Database('./db/RSA.db');
 
 const createTables = function createTables() {
   db.run(`CREATE TABLE if not exists
       "isoTracker" ( "INCNumber" text, "Date_ISO_Sent" DATE NOT NULL, "Date_noticed" DATE,
     "Date_Confirmed" DATE, "Department" TEXT NOT NULL, "Issue" TEXT NOT NULL, "Remediation_Taken" TEXT,
     "Tools" TEXT, "Analyst" TEXT NOT NULL, "Confirmed_Malicious" TEXT, "ISO_Call_Date" DATE, "Response" TEXT,
-    "Escalation" TEXT, "CalCSIRS" TEXT )`);
+    "Escalation" TEXT )`);
 
   db.run(`create table if not exists
   events (IDS TEXT, Date TIMESTAMP, Severity TEXT,
@@ -16,13 +16,13 @@ const createTables = function createTables() {
     Source_IP TEXT, Destination_IP TEXT, Source_Port TEXT,
     Destination_port TEXT, Source_MAC_Address TEXT, Hostname TEXT,
     Destination_Hostname TEXT, Source_Hostname TEXT, Destination_Group_Name TEXT,
-    Attack_phase TEXT, Reference TEXT, Sha256 TEXT, IDS_Code INTEGER, Status TEXT )`);
+    Attack_phase TEXT, Reference TEXT, Sha256 TEXT, Status TEXT )`);
 };
 
 const insertEvent = function insertEvents(json, callback) {
   const keys = _.keys(json[0]);
   db.serialize(() => {
-    const stmt = db.prepare('INSERT into events VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+    const stmt = db.prepare('INSERT into events VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
     json.forEach((event, index) => {
       const statement = [];
       keys.forEach((k) => {
@@ -40,7 +40,7 @@ const insertEvent = function insertEvents(json, callback) {
 };
 
 const insertISONotification = function insertISONotifications(iso, callback) {
-  const stmt = db.prepare('INSERT into isoTracker VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+  const stmt = db.prepare('INSERT into isoTracker VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)');
   const statement = [iso.INCNumber, iso.Date_Sent, iso.Date_noticed,
     iso.Date_Confirmed, iso.Department, iso.Issue, iso.Remediation, iso.Tools,
     iso.AnalystName, iso.Malicious, iso.ISO_CallDate, iso.Response, iso.Esculation, iso.CALCSIRS];
