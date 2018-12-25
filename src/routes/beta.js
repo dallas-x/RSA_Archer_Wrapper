@@ -3,13 +3,13 @@ import express from 'express';
 const dbFunc = require('../js/dbFunc');
 
 const betaRouter = express.Router();
-betaRouter.use((req, res, next) => {
-  if (req.user) {
-    next();
-  } else {
-    res.redirect('/auth/signIn');
-  }
-});
+// betaRouter.use((req, res, next) => {
+//   if (req.user) {
+//     next();
+//   } else {
+//     res.redirect('/auth/signIn');
+//   }
+// });
 
 betaRouter.route('/')
   .get((req, res) => {

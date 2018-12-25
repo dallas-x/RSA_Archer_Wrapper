@@ -10,8 +10,22 @@ const dbFunc = require('../js/dbFunc');
 
 const db = new sqlite3.Database('./db/RSA.db');
 
+// Todo
 // Move all DB functions here and pass them to the router
 
+/*
+function alertHandoff -> Async Function for pushing alerts to archer
+
+Params
+  user: Auth token
+  events: list of alert objects
+  refID: reference ID to the incident
+  cb: callback! // needs to be rewritten using bluebird api
+
+Returns: Error or Null.. will push alerts in the background
+
+Author: Dallas Baker
+*/
 function alertHandoff(user, events, refID, cb) {
   events.forEach((alert, index) => {
     create.alertBody(alert, refID)
@@ -41,6 +55,17 @@ function alertHandoff(user, events, refID, cb) {
   });
 }
 
+/*
+function incBody -> Async Function for creating an incident object
+
+Params
+  user: Auth Token
+  body: Incident Details aka incident body in archer
+
+Returns: string object "Success" or Error
+
+Author: Dallas Baker
+*/
 function processEvents(user, body) {
   return new Promise((resolve, reject) => {
     const { options } = body;

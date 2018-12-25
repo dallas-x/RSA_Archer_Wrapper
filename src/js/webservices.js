@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const url = `${process.env.base_url}/ws/search.asmx?wsdl`;
 
-function buidl3xml(inc) {
+function buildXML(inc) {
   return `
     <SearchReport>
       <PageSize>250</PageSize>
@@ -44,13 +44,23 @@ function buidl3xml(inc) {
     </SearchReport>
   `;
 }
+/*
+function executeSearch -> Async Function for searching previous incidents/ alerts in archer
 
-function executeSearch(token, searchxml) {
+Params
+  token: Auth Token
+  searchXML: XML string to use with soap api
+
+Returns: contentID
+
+Author: Dallas Baker
+*/
+function executeSearch(token, searchXML) {
   return new Promise((resolve, reject) => {
     const clientOptions = {};
     const requestArgs = {
       sessionToken: token,
-      searchOptions: searchxml,
+      searchOptions: searchXML,
       pageNumber: 1,
     };
     soap.createClient(url, clientOptions, (createError, client) => {
@@ -82,11 +92,22 @@ function executeSearch(token, searchxml) {
   });
 }
 
+/*
+function findPrevious -> prepare function for searching
+
+Params
+  token: Auth Token
+  inc: incident content
+
+Returns: Returns contentID or Error
+
+Author: Dallas Baker
+*/
 const findPrevious = (token, inc) => {
   return new Promise((resolve, reject) => {
-    const searchxml = buidl3xml(inc);
+    const searchXML = buildXML(inc);
     try {
-      executeSearch(token, searchxml)
+      executeSearch(token, searchXML)
         .then((contentID) => {
           resolve(contentID);
         })

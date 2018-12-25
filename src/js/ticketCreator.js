@@ -1,3 +1,14 @@
+/*
+function incBody -> Async Function for creating an incident object
+
+Params
+  inc: Incident object with details for an incident
+  contentID: This is ticket number for previous alert if any
+
+Returns: Returns inc object
+
+Author: Dallas Baker
+*/
 function incBody(inc, contentId) {
   return new Promise((resolve, reject) => {
     try {
@@ -33,6 +44,17 @@ function incBody(inc, contentId) {
   });
 }
 
+/*
+function alertBody -> Async Function for creating an alert object
+
+Params
+  alert: alert object with details for an incident
+  refID: This is reference number to the incident
+
+Returns: Returns alert object
+
+Author: Dallas Baker
+*/
 function alertBody(alert, refId) {
   return new Promise((resolve, reject) => {
     try {

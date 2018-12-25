@@ -44,13 +44,13 @@ if (!fs.existsSync('./scripts/input')) {
 }
 if (process.platform === 'darwin') { terminal = 'pwsh'; pss = './scripts/generatorMAC.ps1'; }
 
-eventRouter.use((req, res, next) => {
-  if (req.user) {
-    next();
-  } else {
-    res.redirect('/auth/signIn');
-  }
-});
+// eventRouter.use((req, res, next) => {
+//   if (req.user) {
+//     next();
+//   } else {
+//     res.redirect('/auth/signIn');
+//   }
+// });
 
 eventRouter.route('/Creator')
   .get((req, res) => {
